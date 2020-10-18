@@ -5,7 +5,7 @@ public class Result<T> {
     private T date;
     private boolean success;
     private String message;
-    private Exception e;
+    private Exception exception;
 
     public static final Result<Object> OK = new Result<>(true);
 
@@ -16,19 +16,19 @@ public class Result<T> {
         this(null, success, null, null);
     }
 
-    public Result(Exception e) {
-        this(null, false, e.getMessage(), e);
+    public Result(Exception exception) {
+        this(null, false, exception.getMessage(), exception);
     }
 
     public Result(String message) {
         this(null, false, message, null);
     }
 
-    public Result(T date, boolean success, String message, Exception e) {
+    public Result(T date, boolean success, String message, Exception exception) {
         this.date = date;
         this.success = success;
         this.message = message;
-        this.e = e;
+        this.exception = exception;
     }
 
     public T getDate() {
@@ -55,12 +55,12 @@ public class Result<T> {
         this.message = message;
     }
 
-    public Exception getE() {
-        return e;
+    public Exception getException() {
+        return exception;
     }
 
-    public void setE(Exception e) {
-        this.e = e;
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Result<T> {
                 "date=" + date +
                 ", success=" + success +
                 ", message='" + message + '\'' +
-                ", e=" + e +
+                ", e=" + exception +
                 '}';
     }
 }
