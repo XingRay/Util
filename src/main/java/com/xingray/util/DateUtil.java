@@ -109,11 +109,11 @@ public class DateUtil {
         return calendar.getTimeInMillis();
     }
 
-    public static Long ParseDateToSeconds(String s) {
-        return ParseDateToSeconds(s, "/");
+    public static Long parseDateToSeconds(String s) {
+        return parseDateToSeconds(s, "/");
     }
 
-    public static Long ParseDateToSeconds(String s, String sep) {
+    public static Long parseDateToSeconds(String s, String sep) {
         Long mills = parseDateToMills(s, sep);
         if (mills == null) {
             return null;
