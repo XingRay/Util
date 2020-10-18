@@ -29,10 +29,10 @@ public class ReflectUtil {
             if (fieldName.startsWith("is")) {
                 methodName = fieldName;
             } else {
-                methodName = "is" + captain(fieldName);
+                methodName = "is" + StringUtil.captain(fieldName);
             }
         } else {
-            methodName = "get" + captain(fieldName);
+            methodName = "get" + StringUtil.captain(fieldName);
         }
 
         try {
@@ -61,12 +61,12 @@ public class ReflectUtil {
         String methodName;
         if (type == Boolean.class || type == boolean.class) {
             if (fieldName.startsWith("is")) {
-                methodName = "set" + captain(fieldName.substring(2));
+                methodName = "set" + StringUtil.captain(fieldName.substring(2));
             } else {
-                methodName = "set" + captain(fieldName);
+                methodName = "set" + StringUtil.captain(fieldName);
             }
         } else {
-            methodName = "set" + captain(fieldName);
+            methodName = "set" + StringUtil.captain(fieldName);
         }
 
         try {
@@ -127,13 +127,5 @@ public class ReflectUtil {
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-    }
-
-    private static String captain(String str) {
-        char[] ch = str.toCharArray();
-        if (ch[0] >= 'a' && ch[0] <= 'z') {
-            ch[0] = (char) (ch[0] - 32);
-        }
-        return new String(ch);
     }
 }
