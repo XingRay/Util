@@ -20,12 +20,15 @@ public class StringUtil {
         StringBuilder builder = new StringBuilder();
         boolean isFirst = true;
         for (Object o : array) {
+            String s = o == null ? null : o.toString();
+            if (isEmpty(s)) {
+                continue;
+            }
             if (!isFirst) {
                 builder.append(sep);
             }
             isFirst = false;
-
-            builder.append(o.toString());
+            builder.append(s);
         }
 
         return builder.toString();
@@ -43,12 +46,15 @@ public class StringUtil {
         StringBuilder builder = new StringBuilder();
         boolean isFirst = true;
         for (Object o : iterable) {
+            String s = o == null ? null : o.toString();
+            if (isEmpty(s)) {
+                continue;
+            }
             if (!isFirst) {
                 builder.append(sep);
             }
             isFirst = false;
-
-            builder.append(o.toString());
+            builder.append(s);
         }
 
         return builder.toString();
