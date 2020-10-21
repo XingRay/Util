@@ -7,7 +7,8 @@ import java.util.GregorianCalendar;
 
 public class DateUtil {
 
-    private static final SimpleDateFormat DEFAULT_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    public static final String DEFAULT_DATE_PATTERN = "yyyy/MM/dd";
+    public static final String DEFAULT_SEPARATOR = "/";
 
     public static boolean checkDate(int year, int month, int day) {
         if (month < 1 || month > 12) {
@@ -55,44 +56,52 @@ public class DateUtil {
         return startDay <= endDay;
     }
 
-    public static long dateToSeconds(int year,
-                                     int month,
-                                     int day) {
+    public static int[] millsToYmd(long mills) {
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(year, month - 1, day);
-        return calendar.getTimeInMillis() / 1000;
-    }
-
-    public static int[] secondsToYMD(long seconds) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(seconds * 1000);
+        calendar.setTimeInMillis(mills);
         return new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)};
     }
 
-    public static long parseDateToTimeInMills(String text) {
-        return parseDateToTimeInSeconds(text, "/");
+    public static int[] secondsToYmd(long seconds) {
+        return millsToYmd(seconds * 1000);
     }
 
-    public static long parseDateToTimeInMills(String text, String sep) {
-        int[] ints = StringUtil.toInts(text, sep);
+    public static long ymdToSeconds(int year,
+                                    int month,
+                                    int day) {
+        return ymdToMills(year, month, day) / 1000;
+    }
+
+    public static long ymdToMills(int year,
+                                  int month,
+                                  int day) {
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(ints[0], ints[1] - 1, ints[2], 0, 0, 0);
+        calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar.getTimeInMillis();
     }
 
-    public static long parseDateToTimeInSeconds(String text) {
-        return parseDateToTimeInSeconds(text, "/");
+    public static long ymdStringToMillsValue(String s) {
+        return ymdStringToMillsValue(s, DEFAULT_SEPARATOR);
     }
 
-    public static long parseDateToTimeInSeconds(String text, String sep) {
-        return parseDateToTimeInMills(text, sep) / 1000;
+    public static long ymdStringToMillsValue(String s, String separator) {
+        int[] ints = StringUtil.toInts(s, separator);
+        return ymdToMills(ints[0], ints[1] - 1, ints[2]);
     }
 
-    public static Long parseDateToMills(String s) {
-        return parseDateToMills(s, "/");
+    public static long ymdStringToSecondsValue(String text) {
+        return ymdStringToSecondsValue(text, DEFAULT_SEPARATOR);
     }
 
-    public static Long parseDateToMills(String s, String sep) {
+    public static long ymdStringToSecondsValue(String text, String separator) {
+        return ymdStringToMillsValue(text, separator) / 1000;
+    }
+
+    public static Long ymdStringToMills(String s) {
+        return ymdStringToMills(s, DEFAULT_SEPARATOR);
+    }
+
+    public static Long ymdStringToMills(String s, String sep) {
         Integer[] integers = StringUtil.toIntegers(s, sep);
         if (integers == null || integers.length < 3) {
             return null;
@@ -109,44 +118,85 @@ public class DateUtil {
         return calendar.getTimeInMillis();
     }
 
-    public static Long parseDateToSeconds(String s) {
-        return parseDateToSeconds(s, "/");
+    public static Long ymdStringToSeconds(String s) {
+        return ymdStringToSeconds(s, DEFAULT_SEPARATOR);
     }
 
-    public static Long parseDateToSeconds(String s, String sep) {
-        Long mills = parseDateToMills(s, sep);
+    public static Long ymdStringToSeconds(String s, String sep) {
+        Long mills = ymdStringToMills(s, sep);
         if (mills == null) {
             return null;
         }
         return mills / 1000;
     }
 
+    public static String millsToYmdString(Long mills, String separator) {
+        if (mills == null) {
+            return null;
+        }
 
-    public static String secondsToDateString(Long seconds) {
+        int[] ints = millsToYmd(mills);
+        return ints[0] + separator + ints[1] + separator + ints[2];
+    }
+
+    public static String millsToYmdString(Long mills) {
+        return millsToYmdString(mills, DEFAULT_SEPARATOR);
+    }
+
+    public static String secondsToYmdString(Long seconds, String separator) {
         if (seconds == null) {
             return null;
         }
-        return millsToDateString(seconds * 1000);
+        return millsToYmdString(seconds * 1000, separator);
     }
 
-    public static String secondsToDateString(long seconds) {
-        return millsToDateString(seconds * 1000);
+    public static String secondsToYmdString(Long seconds) {
+        return secondsToDateString(seconds, DEFAULT_SEPARATOR);
     }
 
-    public static String secondsToDateString(long seconds, String format) {
-        return millsToDateString(seconds * 1000, format);
-    }
 
-    private static String millsToDateString(long mills, String format) {
+    public static String millsToDateString(Long mills, String format) {
+        if (mills == null) {
+            return null;
+        }
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(mills);
         return toDateString(calendar.getTime(), format);
     }
 
-    public static String millsToDateString(long mills) {
+    public static String millsToDateString(Long mills) {
+        return millsToDateString(mills, DEFAULT_DATE_PATTERN);
+    }
+
+    public static String secondsToDateString(Long seconds, String format) {
+        if (seconds == null) {
+            return null;
+        }
+        return millsToDateString(seconds * 1000, format);
+    }
+
+    public static String secondsToDateString(Long seconds) {
+        return secondsToDateString(seconds, DEFAULT_DATE_PATTERN);
+    }
+
+
+    public static String millsValueToDateString(long mills, String format) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(mills);
-        return toDateString(calendar.getTime());
+        return toDateString(calendar.getTime(), format);
+    }
+
+    public static String millsValueToDateString(long mills) {
+        return millsValueToDateString(mills, DEFAULT_DATE_PATTERN);
+    }
+
+
+    public static String secondsValueToDateString(long seconds, String format) {
+        return millsValueToDateString(seconds * 1000, format);
+    }
+
+    public static String secondsValueToDateString(long seconds) {
+        return secondsValueToDateString(seconds, DEFAULT_DATE_PATTERN);
     }
 
     public static String toDateString(Date date, String format) {
@@ -155,7 +205,7 @@ public class DateUtil {
     }
 
     public static String toDateString(Date date) {
-        return DEFAULT_FORMAT.format(date);
+        return toDateString(date, DEFAULT_DATE_PATTERN);
     }
 
     public static Date getToday() {
@@ -164,18 +214,18 @@ public class DateUtil {
         return calendar.getTime();
     }
 
-    public static long getTodayInMills() {
+    public static long getTodayMills() {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         return calendar.getTimeInMillis();
     }
 
     public static long getTodayInSeconds() {
-        return getTodayInMills() / 1000;
+        return getTodayMills() / 1000;
     }
 
     public static String todayToDateString() {
-        return toDateString(getToday());
+        return todayToDateString(DEFAULT_DATE_PATTERN);
     }
 
     public static String todayToDateString(String format) {
