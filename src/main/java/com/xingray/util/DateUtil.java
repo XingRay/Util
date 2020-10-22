@@ -10,7 +10,7 @@ public class DateUtil {
     public static final String DEFAULT_DATE_PATTERN = "yyyy/MM/dd";
     public static final String DEFAULT_SEPARATOR = "/";
 
-    public static boolean checkDate(int year, int month, int day) {
+    public static boolean isValidDate(int year, int month, int day) {
         if (month < 1 || month > 12) {
             return false;
         }
@@ -32,13 +32,13 @@ public class DateUtil {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 
-    public static boolean checkDateInterval(int startYear,
-                                            int startMonth,
-                                            int startDay,
-                                            int endYear,
-                                            int endMonth,
-                                            int endDay) {
-        if (!checkDate(startYear, startMonth, startDay) || !checkDate(endYear, endMonth, endDay)) {
+    public static boolean isValidDateInterval(int startYear,
+                                              int startMonth,
+                                              int startDay,
+                                              int endYear,
+                                              int endMonth,
+                                              int endDay) {
+        if (!isValidDate(startYear, startMonth, startDay) || !isValidDate(endYear, endMonth, endDay)) {
             return false;
         }
         if (startYear < endYear) {
@@ -76,6 +76,7 @@ public class DateUtil {
                                   int month,
                                   int day) {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeInMillis(0);
         calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar.getTimeInMillis();
     }
@@ -112,10 +113,7 @@ public class DateUtil {
             }
         }
 
-        Calendar calendar = GregorianCalendar.getInstance();
-        //noinspection MagicConstant
-        calendar.set(integers[0], integers[1] - 1, integers[2], 0, 0, 0);
-        return calendar.getTimeInMillis();
+        return ymdToMills(integers[0], integers[1] - 1, integers[2]);
     }
 
     public static Long ymdStringToSeconds(String s) {
@@ -159,9 +157,7 @@ public class DateUtil {
         if (mills == null) {
             return null;
         }
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(mills);
-        return toDateString(calendar.getTime(), format);
+        return toDateString(millsValueToDate(mills), format);
     }
 
     public static String millsToDateString(Long mills) {
@@ -179,17 +175,37 @@ public class DateUtil {
         return secondsToDateString(seconds, DEFAULT_DATE_PATTERN);
     }
 
-
     public static String millsValueToDateString(long mills, String format) {
+        return toDateString(millsValueToDate(mills), format);
+    }
+
+    public static Date millsToDate(Long mills) {
+        if (mills == null) {
+            return null;
+        }
+        return millsValueToDate(mills);
+    }
+
+    public static Date millsValueToDate(long mills) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(mills);
-        return toDateString(calendar.getTime(), format);
+        return calendar.getTime();
+    }
+
+    public static Date secondsToDate(Long seconds) {
+        if (seconds == null) {
+            return null;
+        }
+        return secondsValueToDate(seconds);
+    }
+
+    public static Date secondsValueToDate(long seconds) {
+        return millsValueToDate(seconds * 1000);
     }
 
     public static String millsValueToDateString(long mills) {
         return millsValueToDateString(mills, DEFAULT_DATE_PATTERN);
     }
-
 
     public static String secondsValueToDateString(long seconds, String format) {
         return millsValueToDateString(seconds * 1000, format);
@@ -208,19 +224,23 @@ public class DateUtil {
         return toDateString(date, DEFAULT_DATE_PATTERN);
     }
 
+
     public static Date getToday() {
+        return getTodayCalendar().getTime();
+    }
+
+    private static Calendar getTodayCalendar() {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeInMillis(0);
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return calendar.getTime();
+        return calendar;
     }
 
     public static long getTodayMills() {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return calendar.getTimeInMillis();
+        return getTodayCalendar().getTimeInMillis();
     }
 
-    public static long getTodayInSeconds() {
+    public static long getTodaySeconds() {
         return getTodayMills() / 1000;
     }
 
