@@ -70,7 +70,7 @@ public class ObjectUtil {
         return t;
     }
 
-    public static <T> Map<String, Object> populateMap(T t, Map<String, Object> map) {
+    public static <T, M extends Map<String, Object>> M populateMap(T t, M map) {
         if (t == null) {
             return map;
         }
