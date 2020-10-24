@@ -3,9 +3,7 @@ package com.xingray.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ObjectUtil {
@@ -39,22 +37,56 @@ public class ObjectUtil {
             return null;
         }
         Field[] fields = t.getClass().getDeclaredFields();
-        if (fields.length == 0) {
+        int size = fields.length;
+        if (size == 0) {
             return null;
         }
-        int size = fields.length;
         Map<String, Object> map = new HashMap<>(size);
-        List<String> fieldNames = new ArrayList<>(size);
         for (Field field : fields) {
-            fieldNames.add(field.getName());
-        }
-
-        for (String fieldName : fieldNames) {
+            String fieldName = field.getName();
             map.put(fieldName, ReflectUtil.get(t, fieldName));
         }
 
         return map;
     }
+
+    /**
+     * 填充对象
+     */
+    public static <T> T populateObject(T t, Map<String, Object> map) {
+        if (map == null || map.isEmpty()) {
+            return t;
+        }
+        if (t == null) {
+            return t;
+        }
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            ReflectUtil.set(t, key, value);
+        }
+
+        return t;
+    }
+
+    public static <T> Map<String, Object> populateMap(T t, Map<String, Object> map) {
+        if (t == null) {
+            return map;
+        }
+        Field[] fields = t.getClass().getDeclaredFields();
+        if (fields.length == 0) {
+            return map;
+        }
+
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            map.put(fieldName, ReflectUtil.get(t, fieldName));
+        }
+
+        return map;
+    }
+
 
     public static Object ensureMatchesType(Object value, Class<?> type) {
         if (value == null) {
