@@ -251,4 +251,12 @@ public class DateUtil {
     public static String todayToDateString(String format) {
         return toDateString(getToday(), format);
     }
+
+    public static long nowMills() {
+        return System.currentTimeMillis();
+    }
+
+    public static long nowSecond() {
+        return nowMills() / 1000;
+    }
 }
