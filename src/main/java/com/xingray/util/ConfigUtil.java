@@ -30,6 +30,9 @@ public class ConfigUtil {
     }
 
     public static void saveProperties(String path, Properties properties) {
+        if (properties == null) {
+            return;
+        }
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             properties.store(fileOutputStream, null);
         } catch (IOException e) {
@@ -49,27 +52,50 @@ public class ConfigUtil {
 
     public static <T> T readFromProperties(String path, Class<T> cls) {
         Properties properties = loadProperties(path);
-        HashMap<String, Object> map = new HashMap<>(properties.size());
-        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            Object key = entry.getKey();
-            Object value = entry.getValue();
-            map.put(key.toString(), value);
-        }
+        Map<String, Object> map = propertiesToMap(properties);
         return ObjectUtil.mapToObject(map, cls);
     }
 
     public static <T> void writeToProperties(String path, T t) {
         Map<String, Object> map = ObjectUtil.objectToMap(t);
-        if (map.isEmpty()) {
-            return;
+        Properties properties = mapToProperties(map);
+        saveProperties(path, properties);
+    }
+
+    public static <T> T populateFromProperties(String path, T t) {
+        if (t == null) {
+            return null;
+        }
+        Properties properties = loadProperties(path);
+        Map<String, Object> map = propertiesToMap(properties);
+        return ObjectUtil.populateObject(t, map);
+    }
+
+    public static Map<String, Object> propertiesToMap(Properties properties) {
+        if (properties == null || properties.isEmpty()) {
+            return null;
         }
 
-        Properties properties = new Properties();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = entry.getKey();
+        Map<String, Object> map = new HashMap<>(properties.size());
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            Object key = entry.getKey();
             Object value = entry.getValue();
-            properties.put(key, value == null ? "" : value.toString());
+            map.put(key.toString(), value);
         }
-        saveProperties(path, properties);
+        return map;
+    }
+
+    public static Properties mapToProperties(Map<?, ?> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        Properties properties = new Properties(map.size());
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            properties.put(StringUtil.toString(key), value);
+        }
+        return properties;
     }
 }
