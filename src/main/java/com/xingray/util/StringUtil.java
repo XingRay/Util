@@ -34,6 +34,214 @@ public class StringUtil {
         return builder.toString();
     }
 
+    public static String toString(boolean[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(boolean[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (boolean o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(byte[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(byte[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (byte o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(short[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(short[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (short o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(char[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(char[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (char o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(int[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(int[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (int o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(long[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(long[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (long o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(float[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(float[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (float o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static String toString(double[] array) {
+        return toString(array, ",");
+    }
+
+    public static String toString(double[] array, String sep) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (double o : array) {
+            String s = String.valueOf(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
     public static String toString(Iterable<?> iterable) {
         return toString(iterable, ",");
     }
