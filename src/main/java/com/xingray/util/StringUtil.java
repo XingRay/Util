@@ -1,6 +1,9 @@
 package com.xingray.util;
 
 import com.xingray.util.base.Mapper;
+import com.xingray.util.base.Mapper2;
+
+import java.util.Map;
 
 public class StringUtil {
 
@@ -8,19 +11,18 @@ public class StringUtil {
         return s == null || s.isBlank() || s.trim().isEmpty();
     }
 
-    public static String toString(Object[] array) {
-        return toString(array, ",");
-    }
 
-    public static String toString(Object[] array, String sep) {
+    // ========================= Array =================================//
+
+    public static <T> String toString(T[] array, String sep, Mapper<T, String> mapper) {
         if (array == null || array.length == 0) {
             return "";
         }
 
         StringBuilder builder = new StringBuilder();
         boolean isFirst = true;
-        for (Object o : array) {
-            String s = o == null ? null : o.toString();
+        for (T o : array) {
+            String s = o == null ? null : mapper == null ? o.toString() : mapper.map(o);
             if (isEmpty(s)) {
                 continue;
             }
@@ -34,9 +36,82 @@ public class StringUtil {
         return builder.toString();
     }
 
-    public static String toString(boolean[] array) {
+    public static <T> String toString(T[] array, String sep) {
+        return toString(array, sep, null);
+    }
+
+    public static <T> String toString(T[] array) {
         return toString(array, ",");
     }
+
+
+    //  ========================== Iterable ===============================//
+
+    public static <T> String toString(Iterable<T> iterable, String sep, Mapper<T, String> mapper) {
+        if (iterable == null) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (T o : iterable) {
+            String s = o == null ? null : mapper == null ? o.toString() : mapper.map(o);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static <T> String toString(Iterable<T> iterable, String sep) {
+        return toString(iterable, sep, null);
+    }
+
+    public static String toString(Iterable<?> iterable) {
+        return toString(iterable, ",");
+    }
+
+
+    //  ========================== Map ===============================//
+
+    public static <K, V> String toString(Map<K, V> map, String sep, Mapper2<K, V, String> mapper) {
+        if (map == null || map.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        boolean isFirst = true;
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            K key = entry.getKey();
+            V value = entry.getValue();
+            String s = mapper == null ? key + ":" + value : mapper.map(key, value);
+            if (isEmpty(s)) {
+                continue;
+            }
+            if (!isFirst) {
+                builder.append(sep);
+            }
+            isFirst = false;
+            builder.append(s);
+        }
+
+        return builder.toString();
+    }
+
+    public static <K, V> String toString(Map<K, V> map, String sep) {
+        return toString(map, sep, null);
+    }
+
+    public static <K, V> String toString(Map<K, V> map) {
+        return toString(map, ",");
+    }
+
 
     public static String toString(boolean[] array, String sep) {
         if (array == null || array.length == 0) {
@@ -58,6 +133,10 @@ public class StringUtil {
         }
 
         return builder.toString();
+    }
+
+    public static String toString(boolean[] array) {
+        return toString(array, ",");
     }
 
     public static String toString(byte[] array) {
@@ -237,51 +316,6 @@ public class StringUtil {
             }
             isFirst = false;
             builder.append(s);
-        }
-
-        return builder.toString();
-    }
-
-    public static String toString(Iterable<?> iterable) {
-        return toString(iterable, ",");
-    }
-
-    public static String toString(Iterable<?> iterable, String sep) {
-        if (iterable == null) {
-            return "";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        boolean isFirst = true;
-        for (Object o : iterable) {
-            String s = o == null ? null : o.toString();
-            if (isEmpty(s)) {
-                continue;
-            }
-            if (!isFirst) {
-                builder.append(sep);
-            }
-            isFirst = false;
-            builder.append(s);
-        }
-
-        return builder.toString();
-    }
-
-    public static <T> String toString(Iterable<T> iterable, String sep, Mapper<T, String> mapper) {
-        if (iterable == null) {
-            return "";
-        }
-
-        StringBuilder builder = new StringBuilder();
-        boolean isFirst = true;
-        for (T t : iterable) {
-            if (!isFirst) {
-                builder.append(sep);
-            }
-            isFirst = false;
-
-            builder.append(mapper.map(t));
         }
 
         return builder.toString();
