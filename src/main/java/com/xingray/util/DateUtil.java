@@ -113,7 +113,7 @@ public class DateUtil {
             }
         }
 
-        return ymdToMills(integers[0], integers[1] - 1, integers[2]);
+        return ymdToMills(integers[0], integers[1], integers[2]);
     }
 
     public static Long ymdStringToSeconds(String s) {
