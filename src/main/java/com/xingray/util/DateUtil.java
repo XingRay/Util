@@ -87,7 +87,7 @@ public class DateUtil {
 
     public static long ymdStringToMillsValue(String s, String separator) {
         int[] ints = StringUtil.toInts(s, separator);
-        return ymdToMills(ints[0], ints[1] - 1, ints[2]);
+        return ymdToMills(ints[0], ints[1], ints[2]);
     }
 
     public static long ymdStringToSecondsValue(String text) {
