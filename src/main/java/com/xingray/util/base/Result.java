@@ -2,7 +2,7 @@ package com.xingray.util.base;
 
 public class Result<T> {
 
-    private T date;
+    private T data;
     private boolean success;
     private String message;
     private int code;
@@ -25,19 +25,19 @@ public class Result<T> {
         this(null, false, message, 0, null);
     }
 
-    public Result(T date, boolean success, String message, int code, Exception exception) {
-        this.date = date;
+    public Result(T data, boolean success, String message, int code, Exception exception) {
+        this.data = data;
         this.success = success;
         this.message = message;
         this.exception = exception;
     }
 
-    public T getDate() {
-        return date;
+    public T getData() {
+        return data;
     }
 
-    public void setDate(T date) {
-        this.date = date;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public boolean isSuccess() {
@@ -75,7 +75,7 @@ public class Result<T> {
     @Override
     public String toString() {
         return "Result{" +
-                "date=" + date +
+                "date=" + data +
                 ", success=" + success +
                 ", message='" + message + '\'' +
                 ", code=" + code +
