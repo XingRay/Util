@@ -10,6 +10,11 @@ public class Result<T> {
 
     public static final Result<Object> OK = new Result<>(true);
 
+    public static <V> Result<V> success(V v) {
+        return new Result<>(v, true, null, 0, null);
+    }
+
+
     public Result() {
     }
 
