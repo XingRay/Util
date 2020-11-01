@@ -19,6 +19,9 @@ public class ConfigUtil {
 
     public static Properties loadProperties(String path) {
         Properties properties = new Properties();
+        if (!FileUtil.isFileExist(path)) {
+            return properties;
+        }
 
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
@@ -33,10 +36,12 @@ public class ConfigUtil {
         if (properties == null) {
             return;
         }
+        FileUtil.createFileIfNotExist(path);
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             properties.store(fileOutputStream, null);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

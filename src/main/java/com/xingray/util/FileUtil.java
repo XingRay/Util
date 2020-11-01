@@ -493,4 +493,20 @@ public class FileUtil {
         URL resource = FileUtil.class.getResource(path);
         return resource.toExternalForm();
     }
+
+    public static void createFileIfNotExist(String path) {
+        if (isFileExist(path)) {
+            return;
+        }
+        File file = new File(path);
+        File parent = new File(file.getParent());
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
