@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class DateUtil {
 
@@ -60,6 +61,7 @@ public class DateUtil {
 
     public static int[] millsToYmd(long mills) {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
         calendar.setTimeInMillis(mills);
         return new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)};
     }
@@ -78,6 +80,7 @@ public class DateUtil {
                                   int month,
                                   int day) {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
         calendar.setTimeInMillis(0);
         calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar.getTimeInMillis();
@@ -190,6 +193,7 @@ public class DateUtil {
 
     public static Date millsValueToDate(long mills) {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
         calendar.setTimeInMillis(mills);
         return calendar.getTime();
     }
@@ -233,6 +237,7 @@ public class DateUtil {
 
     private static Calendar getTodayCalendar() {
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
         calendar.setTimeInMillis(0);
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         return calendar;
