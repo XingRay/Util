@@ -9,6 +9,8 @@ public class DateUtil {
 
     public static final String DEFAULT_DATE_PATTERN = "yyyy/MM/dd";
     public static final String DEFAULT_SEPARATOR = "/";
+    public static final int DAY_IN_SECONDS = 24 * 3600;
+    public static final int DAY_IN_MILLS = DAY_IN_SECONDS * 1000;
 
     public static boolean isValidDate(int year, int month, int day) {
         if (month < 1 || month > 12) {
