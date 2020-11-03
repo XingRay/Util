@@ -57,30 +57,57 @@ public class DateUtil {
         return startDay <= endDay;
     }
 
-    public static int[] millsToYmd(long mills) {
-        return millsToYmd(mills, ZONE_ID_GMT);
+
+    public static int[] millsToYmd(long mills, ZoneId zoneId) {
+        LocalDate localDate = millsToLocalDate(mills, zoneId);
+        return new int[]{localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()};
     }
 
     public static int[] millsToYmd(long mills, String zoneId) {
         return millsToYmd(mills, ZoneId.of(zoneId));
     }
 
-    public static int[] millsToYmd(long mills, ZoneId zoneId) {
-        Instant instant = Instant.ofEpochMilli(mills);
-        LocalDate localDate = LocalDate.ofInstant(instant, zoneId);
-        return new int[]{localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()};
-    }
-
-    public static int[] secondsToYmd(long seconds) {
-        return millsToYmd(seconds * 1000, ZONE_ID_GMT);
-    }
-
-    public static int[] secondsToYmd(long seconds, String zoneId) {
-        return millsToYmd(seconds * 1000, ZoneId.of(zoneId));
+    public static int[] millsToYmd(long mills) {
+        return millsToYmd(mills, ZONE_ID_GMT);
     }
 
     public static int[] secondsToYmd(long seconds, ZoneId zoneId) {
-        return millsToYmd(seconds * 1000, zoneId);
+        LocalDate localDate = secondsToLocalDate(seconds, zoneId);
+        return new int[]{localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()};
+    }
+
+    public static int[] secondsToYmd(long seconds, String zoneId) {
+        return secondsToYmd(seconds, ZoneId.of(zoneId));
+    }
+
+    public static int[] secondsToYmd(long seconds) {
+        return secondsToYmd(seconds, ZONE_ID_GMT);
+    }
+
+    public static LocalDate millsToLocalDate(long mills, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        return LocalDate.ofInstant(instant, zoneId);
+    }
+
+    public static LocalDate millsToLocalDate(long mills, String zoneId) {
+        return millsToLocalDate(mills, ZoneId.of(zoneId));
+    }
+
+    public static LocalDate millsToLocalDate(long mills) {
+        return millsToLocalDate(mills, ZONE_ID_GMT);
+    }
+
+    public static LocalDate secondsToLocalDate(long seconds, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochSecond(seconds);
+        return LocalDate.ofInstant(instant, zoneId);
+    }
+
+    public static LocalDate secondsToLocalDate(long seconds, String zoneId) {
+        return secondsToLocalDate(seconds, ZoneId.of(zoneId));
+    }
+
+    public static LocalDate secondsToLocalDate(long seconds) {
+        return secondsToLocalDate(seconds, ZONE_ID_GMT);
     }
 
     public static long ymdToSeconds(int year,
