@@ -1,10 +1,7 @@
 package com.xingray.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
@@ -12,6 +9,7 @@ public class DateUtil {
     public static final String DEFAULT_SEPARATOR = "/";
     public static final int DAY_IN_SECONDS = 24 * 3600;
     public static final int DAY_IN_MILLS = DAY_IN_SECONDS * 1000;
+    public static final ZoneId ZONE_ID_GMT = ZoneId.of("+00:00");
 
     public static boolean isValidDate(int year, int month, int day) {
         if (month < 1 || month > 12) {
@@ -60,54 +58,120 @@ public class DateUtil {
     }
 
     public static int[] millsToYmd(long mills) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
-        calendar.setTimeInMillis(mills);
-        return new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)};
+        return millsToYmd(mills, ZONE_ID_GMT);
+    }
+
+    public static int[] millsToYmd(long mills, String zoneId) {
+        return millsToYmd(mills, ZoneId.of(zoneId));
+    }
+
+    public static int[] millsToYmd(long mills, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        LocalDate localDate = LocalDate.ofInstant(instant, zoneId);
+        return new int[]{localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth()};
     }
 
     public static int[] secondsToYmd(long seconds) {
-        return millsToYmd(seconds * 1000);
+        return millsToYmd(seconds * 1000, ZONE_ID_GMT);
+    }
+
+    public static int[] secondsToYmd(long seconds, String zoneId) {
+        return millsToYmd(seconds * 1000, ZoneId.of(zoneId));
+    }
+
+    public static int[] secondsToYmd(long seconds, ZoneId zoneId) {
+        return millsToYmd(seconds * 1000, zoneId);
+    }
+
+    public static long ymdToSeconds(int year,
+                                    int month,
+                                    int day,
+                                    ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, month, day, 0, 0, 0, 0);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+        return zonedDateTime.toInstant().getEpochSecond();
+    }
+
+    public static long ymdToSeconds(int year,
+                                    int month,
+                                    int day,
+                                    String zoneId) {
+        return ymdToSeconds(year, month, day, ZoneId.of(zoneId));
     }
 
     public static long ymdToSeconds(int year,
                                     int month,
                                     int day) {
-        return ymdToMills(year, month, day) / 1000;
+        return ymdToSeconds(year, month, day, ZONE_ID_GMT);
+    }
+
+    public static long ymdToMills(int year,
+                                  int month,
+                                  int day,
+                                  ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, month, day, 0, 0, 0, 0);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+        return zonedDateTime.toInstant().toEpochMilli();
+    }
+
+    public static long ymdToMills(int year,
+                                  int month,
+                                  int day,
+                                  String zoneId) {
+        return ymdToMills(year, month, day, ZoneId.of(zoneId));
     }
 
     public static long ymdToMills(int year,
                                   int month,
                                   int day) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
-        calendar.setTimeInMillis(0);
-        calendar.set(year, month - 1, day, 0, 0, 0);
-        return calendar.getTimeInMillis();
+        return ymdToMills(year, month, day, ZONE_ID_GMT);
+    }
+
+
+    public static long ymdStringToMillsValue(String s, String separator, ZoneId zoneId) {
+        int[] ints = StringUtil.toInts(s, separator);
+        return ymdToMills(ints[0], ints[1], ints[2], zoneId);
+    }
+
+    public static long ymdStringToMillsValue(String s, String separator, String zoneId) {
+        return ymdStringToMillsValue(s, separator, ZoneId.of(zoneId));
+    }
+
+    public static long ymdStringToMillsValue(String s, ZoneId zoneId) {
+        return ymdStringToMillsValue(s, DEFAULT_SEPARATOR, zoneId);
+    }
+
+    public static long ymdStringToMillsValue(String s, String separator) {
+        return ymdStringToMillsValue(s, separator, ZONE_ID_GMT);
     }
 
     public static long ymdStringToMillsValue(String s) {
         return ymdStringToMillsValue(s, DEFAULT_SEPARATOR);
     }
 
-    public static long ymdStringToMillsValue(String s, String separator) {
+
+    public static long ymdStringToSecondsValue(String s, String separator, ZoneId zoneId) {
         int[] ints = StringUtil.toInts(s, separator);
-        return ymdToMills(ints[0], ints[1], ints[2]);
+        return ymdToSeconds(ints[0], ints[1], ints[2], zoneId);
     }
 
-    public static long ymdStringToSecondsValue(String text) {
-        return ymdStringToSecondsValue(text, DEFAULT_SEPARATOR);
+    public static long ymdStringToSecondsValue(String s, String separator, String zoneId) {
+        return ymdStringToSecondsValue(s, separator, ZoneId.of(zoneId));
     }
 
-    public static long ymdStringToSecondsValue(String text, String separator) {
-        return ymdStringToMillsValue(text, separator) / 1000;
+    public static long ymdStringToSecondsValue(String s, ZoneId zoneId) {
+        return ymdStringToSecondsValue(s, DEFAULT_SEPARATOR, zoneId);
     }
 
-    public static Long ymdStringToMills(String s) {
-        return ymdStringToMills(s, DEFAULT_SEPARATOR);
+    public static long ymdStringToSecondsValue(String s, String separator) {
+        return ymdStringToSecondsValue(s, separator, ZONE_ID_GMT);
     }
 
-    public static Long ymdStringToMills(String s, String sep) {
+    public static long ymdStringToSecondsValue(String s) {
+        return ymdStringToSecondsValue(s, DEFAULT_SEPARATOR, ZONE_ID_GMT);
+    }
+
+    public static Long ymdStringToMills(String s, String sep, ZoneId zoneId) {
         Integer[] integers = StringUtil.toIntegers(s, sep);
         if (integers == null || integers.length < 3) {
             return null;
@@ -118,152 +182,283 @@ public class DateUtil {
             }
         }
 
-        return ymdToMills(integers[0], integers[1], integers[2]);
+        return ymdToMills(integers[0], integers[1], integers[2], zoneId);
     }
 
-    public static Long ymdStringToSeconds(String s) {
-        return ymdStringToSeconds(s, DEFAULT_SEPARATOR);
+    public static Long ymdStringToMills(String s, String sep, String zoneId) {
+        return ymdStringToMills(s, sep, ZoneId.of(zoneId));
+    }
+
+    public static Long ymdStringToMills(String s, ZoneId zoneId) {
+        return ymdStringToMills(s, DEFAULT_SEPARATOR, zoneId);
+    }
+
+    public static Long ymdStringToMills(String s, String sep) {
+        return ymdStringToMills(s, sep, ZONE_ID_GMT);
+    }
+
+    public static Long ymdStringToMills(String s) {
+        return ymdStringToMills(s, DEFAULT_SEPARATOR, ZONE_ID_GMT);
+    }
+
+    public static Long ymdStringToSeconds(String s, String sep, ZoneId zoneId) {
+        Integer[] integers = StringUtil.toIntegers(s, sep);
+        if (integers == null || integers.length < 3) {
+            return null;
+        }
+        for (Integer i : integers) {
+            if (i == null) {
+                return null;
+            }
+        }
+
+        return ymdToSeconds(integers[0], integers[1], integers[2], zoneId);
+    }
+
+    public static Long ymdStringToSeconds(String s, String sep, String zoneId) {
+        return ymdStringToSeconds(s, sep, ZoneId.of(zoneId));
+    }
+
+    public static Long ymdStringToSeconds(String s, ZoneId zoneId) {
+        return ymdStringToSeconds(s, DEFAULT_SEPARATOR, zoneId);
     }
 
     public static Long ymdStringToSeconds(String s, String sep) {
-        Long mills = ymdStringToMills(s, sep);
-        if (mills == null) {
-            return null;
-        }
-        return mills / 1000;
+        return ymdStringToSeconds(s, sep, ZONE_ID_GMT);
     }
 
-    public static String millsToYmdString(Long mills, String separator) {
+    public static Long ymdStringToSeconds(String s) {
+        return ymdStringToSeconds(s, DEFAULT_SEPARATOR, ZONE_ID_GMT);
+    }
+
+    public static String millsToYmdString(Long mills, String separator, ZoneId zoneId) {
         if (mills == null) {
             return null;
         }
 
-        int[] ints = millsToYmd(mills);
+        int[] ints = millsToYmd(mills, zoneId);
         return ints[0] + separator + ints[1] + separator + ints[2];
     }
 
+    public static String millsToYmdString(Long mills, String separator, String zoneId) {
+        return millsToYmdString(mills, separator, ZoneId.of(zoneId));
+    }
+
+    public static String millsToYmdString(Long mills, ZoneId zoneId) {
+        return millsToYmdString(mills, DEFAULT_SEPARATOR, zoneId);
+    }
+
+    public static String millsToYmdString(Long mills, String separator) {
+        return millsToYmdString(mills, separator, ZONE_ID_GMT);
+    }
+
     public static String millsToYmdString(Long mills) {
-        return millsToYmdString(mills, DEFAULT_SEPARATOR);
+        return millsToYmdString(mills, DEFAULT_SEPARATOR, ZONE_ID_GMT);
+    }
+
+    public static String secondsToYmdString(Long seconds, String separator, ZoneId zoneId) {
+        if (seconds == null) {
+            return null;
+        }
+        return millsToYmdString(seconds * 1000, separator, zoneId);
+    }
+
+    public static String secondsToYmdString(Long seconds, String separator, String zoneId) {
+        return secondsToYmdString(seconds, separator, ZoneId.of(zoneId));
+    }
+
+    public static String secondsToYmdString(Long seconds, ZoneId zoneId) {
+        return secondsToYmdString(seconds, DEFAULT_SEPARATOR, zoneId);
     }
 
     public static String secondsToYmdString(Long seconds, String separator) {
-        if (seconds == null) {
-            return null;
-        }
-        return millsToYmdString(seconds * 1000, separator);
+        return secondsToYmdString(seconds, separator, ZONE_ID_GMT);
     }
 
     public static String secondsToYmdString(Long seconds) {
-        return secondsToDateString(seconds, DEFAULT_SEPARATOR);
+        return secondsToYmdString(seconds, DEFAULT_SEPARATOR, ZONE_ID_GMT);
     }
 
-
-    public static String millsToDateString(Long mills, String format) {
-        if (mills == null) {
-            return null;
-        }
-        return toDateString(millsValueToDate(mills), format);
+    public static String millsValueToDateString(long mills, DateTimeFormatter formatter, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+        return localDateTime.format(formatter);
     }
 
-    public static String millsToDateString(Long mills) {
-        return millsToDateString(mills, DEFAULT_DATE_PATTERN);
+    public static String millsValueToDateString(long mills, DateTimeFormatter formatter, String zoneId) {
+        return millsValueToDateString(mills, formatter, ZoneId.of(zoneId));
     }
 
-    public static String secondsToDateString(Long seconds, String format) {
-        if (seconds == null) {
-            return null;
-        }
-        return millsToDateString(seconds * 1000, format);
+    public static String millsValueToDateString(long mills, String format, ZoneId zoneId) {
+        return millsValueToDateString(mills, DateTimeFormatter.ofPattern(format), zoneId);
     }
 
-    public static String secondsToDateString(Long seconds) {
-        return secondsToDateString(seconds, DEFAULT_DATE_PATTERN);
+    public static String millsValueToDateString(long mills, String format, String zoneId) {
+        return millsValueToDateString(mills, DateTimeFormatter.ofPattern(format), ZoneId.of(zoneId));
+    }
+
+    public static String millsValueToDateString(long mills, ZoneId zoneId) {
+        return millsValueToDateString(mills, DateTimeFormatter.BASIC_ISO_DATE, zoneId);
     }
 
     public static String millsValueToDateString(long mills, String format) {
-        return toDateString(millsValueToDate(mills), format);
-    }
-
-    public static Date millsToDate(Long mills) {
-        if (mills == null) {
-            return null;
-        }
-        return millsValueToDate(mills);
-    }
-
-    public static Date millsValueToDate(long mills) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
-        calendar.setTimeInMillis(mills);
-        return calendar.getTime();
-    }
-
-    public static Date secondsToDate(Long seconds) {
-        if (seconds == null) {
-            return null;
-        }
-        return secondsValueToDate(seconds);
-    }
-
-    public static Date secondsValueToDate(long seconds) {
-        return millsValueToDate(seconds * 1000);
+        return millsValueToDateString(mills, DateTimeFormatter.ofPattern(format), ZONE_ID_GMT);
     }
 
     public static String millsValueToDateString(long mills) {
-        return millsValueToDateString(mills, DEFAULT_DATE_PATTERN);
+        return millsValueToDateString(mills, DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
+    }
+
+    public static String millsToDateString(Long mills, DateTimeFormatter formatter, ZoneId zoneId) {
+        if (mills == null) {
+            return null;
+        }
+
+        return millsValueToDateString(mills, formatter, zoneId);
+    }
+
+    public static String millsToDateString(Long mills, DateTimeFormatter formatter, String zoneId) {
+        return millsToDateString(mills, formatter, ZoneId.of(zoneId));
+    }
+
+    public static String millsToDateString(Long mills, String format, ZoneId zoneId) {
+        return millsToDateString(mills, DateTimeFormatter.ofPattern(format), zoneId);
+    }
+
+    public static String millsToDateString(Long mills, String format, String zoneId) {
+        return millsToDateString(mills, DateTimeFormatter.ofPattern(format), ZoneId.of(zoneId));
+    }
+
+    public static String millsToDateString(Long mills, ZoneId zoneId) {
+        return millsToDateString(mills, DateTimeFormatter.BASIC_ISO_DATE, zoneId);
+    }
+
+    public static String millsToDateString(Long mills, String format) {
+        return millsToDateString(mills, DateTimeFormatter.ofPattern(format), ZONE_ID_GMT);
+    }
+
+    public static String millsToDateString(Long mills) {
+        return millsToDateString(mills, DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
+    }
+
+    public static String secondsValueToDateString(long seconds, DateTimeFormatter formatter, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochSecond(seconds);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+        return localDateTime.format(formatter);
+    }
+
+    public static String secondsValueToDateString(long seconds, DateTimeFormatter formatter, String zoneId) {
+        return secondsValueToDateString(seconds, formatter, ZoneId.of(zoneId));
+    }
+
+    public static String secondsValueToDateString(long seconds, String format, ZoneId zoneId) {
+        return secondsValueToDateString(seconds, DateTimeFormatter.ofPattern(format), zoneId);
+    }
+
+    public static String secondsValueToDateString(long seconds, String format, String zoneId) {
+        return secondsValueToDateString(seconds, DateTimeFormatter.ofPattern(format), ZoneId.of(zoneId));
+    }
+
+    public static String secondsValueToDateString(long seconds, ZoneId zoneId) {
+        return secondsValueToDateString(seconds, DateTimeFormatter.BASIC_ISO_DATE, zoneId);
     }
 
     public static String secondsValueToDateString(long seconds, String format) {
-        return millsValueToDateString(seconds * 1000, format);
+        return secondsValueToDateString(seconds, DateTimeFormatter.ofPattern(format), ZONE_ID_GMT);
     }
 
     public static String secondsValueToDateString(long seconds) {
-        return secondsValueToDateString(seconds, DEFAULT_DATE_PATTERN);
+        return secondsValueToDateString(seconds, DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
     }
 
-    public static String toDateString(Date date, String format) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-        return dateFormat.format(date);
+    public static String secondsToDateString(Long seconds, DateTimeFormatter formatter, ZoneId zoneId) {
+        if (seconds == null) {
+            return null;
+        }
+        return secondsValueToDateString(seconds, formatter, zoneId);
     }
 
-    public static String toDateString(Date date) {
-        return toDateString(date, DEFAULT_DATE_PATTERN);
+    public static String secondsToDateString(Long seconds, DateTimeFormatter formatter, String zoneId) {
+        return secondsToDateString(seconds, formatter, ZoneId.of(zoneId));
     }
 
-
-    public static Date getToday() {
-        return getTodayCalendar().getTime();
+    public static String secondsToDateString(Long seconds, String format, ZoneId zoneId) {
+        return secondsToDateString(seconds, DateTimeFormatter.ofPattern(format), zoneId);
     }
 
-    private static Calendar getTodayCalendar() {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GTM"));
-        calendar.setTimeInMillis(0);
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return calendar;
+    public static String secondsToDateString(Long seconds, String format, String zoneId) {
+        return secondsToDateString(seconds, DateTimeFormatter.ofPattern(format), ZoneId.of(zoneId));
+    }
+
+    public static String secondsToDateString(Long seconds, ZoneId zoneId) {
+        return secondsToDateString(seconds, DateTimeFormatter.BASIC_ISO_DATE, zoneId);
+    }
+
+    public static String secondsToDateString(Long seconds, String format) {
+        return secondsToDateString(seconds, DateTimeFormatter.ofPattern(format), ZONE_ID_GMT);
+    }
+
+    public static String secondsToDateString(Long seconds) {
+        return secondsToDateString(seconds, DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
+    }
+
+    public static long getTodayMills(ZoneId zoneId) {
+        LocalDate localDate = LocalDate.ofInstant(Instant.now(), zoneId);
+        LocalDateTime localDateTime = localDate.atTime(0, 0, 0, 0);
+        return localDateTime.atZone(zoneId).toInstant().toEpochMilli();
+    }
+
+    public static long getTodayMills(String zoneId) {
+        return getTodayMills(ZoneId.of(zoneId));
     }
 
     public static long getTodayMills() {
-        return getTodayCalendar().getTimeInMillis();
+        return getTodayMills(ZONE_ID_GMT);
+    }
+
+    public static long getTodaySeconds(ZoneId zoneId) {
+        LocalDate localDate = LocalDate.ofInstant(Instant.now(), zoneId);
+        LocalDateTime localDateTime = localDate.atTime(0, 0, 0, 0);
+        return localDateTime.atZone(zoneId).toInstant().getEpochSecond();
+    }
+
+    public static long getTodaySeconds(String zoneId) {
+        return getTodaySeconds(ZoneId.of(zoneId));
     }
 
     public static long getTodaySeconds() {
-        return getTodayMills() / 1000;
+        return getTodaySeconds(ZONE_ID_GMT);
+    }
+
+    public static String todayToDateString(DateTimeFormatter formatter, ZoneId zoneId) {
+        return LocalDate.ofInstant(Instant.now(), zoneId).format(formatter);
+    }
+
+    public static String todayToDateString(DateTimeFormatter formatter, String zoneId) {
+        return todayToDateString(formatter, ZoneId.of(zoneId));
+    }
+
+    public static String todayToDateString(String format, ZoneId zoneId) {
+        return LocalDate.ofInstant(Instant.now(), zoneId).format(DateTimeFormatter.ofPattern(format));
+    }
+
+    public static String todayToDateString(String format, String zoneId) {
+        return todayToDateString(DateTimeFormatter.ofPattern(format), ZoneId.of(zoneId));
+    }
+
+    public static String todayToDateString(DateTimeFormatter formatter) {
+        return todayToDateString(formatter, ZONE_ID_GMT);
     }
 
     public static String todayToDateString() {
-        return todayToDateString(DEFAULT_DATE_PATTERN);
-    }
-
-    public static String todayToDateString(String format) {
-        return toDateString(getToday(), format);
+        return todayToDateString(DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
     }
 
     public static long nowMills() {
-        return System.currentTimeMillis();
+        return Instant.now().toEpochMilli();
     }
 
     public static long nowSecond() {
-        return nowMills() / 1000;
+        return Instant.now().getEpochSecond();
     }
 }
