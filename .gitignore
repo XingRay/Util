@@ -29,3 +29,5 @@ hs_err_pid*
 /target/test-classes/META-INF/jpms.args
 /target/maven-archiver/pom.properties
 /target/surefire-reports/TEST-com.xingray.util.DateUtilTest.xml
+/target/surefire-reports/com.xingray.util.ReflectUtilTest.txt
+/target/surefire-reports/TEST-com.xingray.util.ReflectUtilTest.xml
