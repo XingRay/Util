@@ -650,4 +650,42 @@ public class DateTimeUtil {
     public static int[] secondsToHMS(long seconds) {
         return secondsToHMS(seconds, ZONE_ID_GMT);
     }
+
+    public static boolean isSameDayOfMills(long mills1, long mills2, ZoneId zoneId) {
+        if (Math.abs(mills1 - mills2) > DAY_IN_MILLS) {
+            return false;
+        }
+
+        LocalDate localDate1 = millsToLocalDate(mills1, zoneId);
+        LocalDate localDate2 = millsToLocalDate(mills2, zoneId);
+
+        return localDate1.isEqual(localDate2);
+    }
+
+    public static boolean isSameDayOfMills(long mills1, long mills2, String zoneId) {
+        return isSameDayOfMills(mills1, mills2, ZoneId.of(zoneId));
+    }
+
+    public static boolean isSameDayOfMills(long mills1, long mills2) {
+        return isSameDayOfMills(mills1, mills2, ZONE_ID_GMT);
+    }
+
+    public static boolean isSameDayOfSeconds(long seconds1, long seconds2, ZoneId zoneId) {
+        if (Math.abs(seconds1 - seconds2) > DAY_IN_SECONDS) {
+            return false;
+        }
+
+        LocalDate localDate1 = secondsToLocalDate(seconds1, zoneId);
+        LocalDate localDate2 = secondsToLocalDate(seconds2, zoneId);
+
+        return localDate1.isEqual(localDate2);
+    }
+
+    public static boolean isSameDayOfSeconds(long seconds1, long seconds2, String zoneId) {
+        return isSameDayOfSeconds(seconds1, seconds2, ZoneId.of(zoneId));
+    }
+
+    public static boolean isSameDayOfSeconds(long seconds1, long seconds2) {
+        return isSameDayOfSeconds(seconds1, seconds2, ZONE_ID_GMT);
+    }
 }
