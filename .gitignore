@@ -31,3 +31,5 @@ hs_err_pid*
 /target/surefire-reports/TEST-com.xingray.util.DateTimeUtilTest.xml
 /target/surefire-reports/com.xingray.util.ReflectUtilTest.txt
 /target/surefire-reports/TEST-com.xingray.util.ReflectUtilTest.xml
+/target/surefire-reports/com.xingray.util.DateUtilTest.txt
+/target/surefire-reports/TEST-com.xingray.util.DateUtilTest.xml
