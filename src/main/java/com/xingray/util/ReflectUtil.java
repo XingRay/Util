@@ -24,16 +24,7 @@ public class ReflectUtil {
         }
 
         Class<?> type = field.getType();
-        String methodName;
-        if (type == Boolean.class || type == boolean.class) {
-            if (fieldName.startsWith("is")) {
-                methodName = fieldName;
-            } else {
-                methodName = "is" + StringUtil.captain(fieldName);
-            }
-        } else {
-            methodName = "get" + StringUtil.captain(fieldName);
-        }
+        String methodName = getGetterName(fieldName, type);
 
         try {
             return cls.getMethod(methodName);
@@ -41,6 +32,27 @@ public class ReflectUtil {
             System.out.println("method: " + methodName + " not found in class: " + cls.getCanonicalName());
         }
         return null;
+    }
+
+    public static String getGetterName(String fieldName, Class<?> type) {
+        String methodName;
+        if (type == boolean.class) {
+            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+                methodName = fieldName;
+            } else {
+                methodName = "is" + StringUtil.captain(fieldName);
+            }
+        } else if (type == Boolean.class) {
+            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+                methodName = "get" + StringUtil.captain(fieldName.substring(2));
+            } else {
+                methodName = "get" + StringUtil.captain(fieldName);
+            }
+        } else {
+            methodName = "get" + StringUtil.captain(fieldName);
+        }
+
+        return methodName;
     }
 
     /**
@@ -58,16 +70,7 @@ public class ReflectUtil {
         }
 
         Class<?> type = field.getType();
-        String methodName;
-        if (type == Boolean.class || type == boolean.class) {
-            if (fieldName.startsWith("is")) {
-                methodName = "set" + StringUtil.captain(fieldName.substring(2));
-            } else {
-                methodName = "set" + StringUtil.captain(fieldName);
-            }
-        } else {
-            methodName = "set" + StringUtil.captain(fieldName);
-        }
+        String methodName = getSetterName(fieldName, type);
 
         try {
             return cls.getMethod(methodName, type);
@@ -76,6 +79,27 @@ public class ReflectUtil {
         }
         return null;
     }
+
+    public static String getSetterName(String fieldName, Class<?> type) {
+        String methodName;
+        if (type == boolean.class) {
+            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+                methodName = "set" + StringUtil.captain(fieldName.substring(2));
+            } else {
+                methodName = "set" + StringUtil.captain(fieldName);
+            }
+        } else if (type == Boolean.class) {
+            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+                methodName = "set" + StringUtil.captain(fieldName.substring(2));
+            } else {
+                methodName = "set" + StringUtil.captain(fieldName);
+            }
+        } else {
+            methodName = "set" + StringUtil.captain(fieldName);
+        }
+        return methodName;
+    }
+
 
     public static Object get(Object o, String fieldName) {
         return get(o, fieldName, null);
