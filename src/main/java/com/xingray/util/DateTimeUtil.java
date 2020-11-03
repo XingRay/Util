@@ -3,7 +3,7 @@ package com.xingray.util;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-public class DateUtil {
+public class DateTimeUtil {
 
     public static final String DEFAULT_DATE_PATTERN = "yyyy/MM/dd";
     public static final String DEFAULT_SEPARATOR = "/";
@@ -595,5 +595,59 @@ public class DateUtil {
 
     public static long endSecondsOfSameDay(long seconds) {
         return endSecondsOfSameDay(seconds, ZONE_ID_GMT);
+    }
+
+    // =====================================================//
+
+    public static LocalTime millsToLocalTime(long mills, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        return LocalTime.ofInstant(instant, zoneId);
+    }
+
+    public static LocalTime millsToLocalTime(long mills, String zoneId) {
+        return millsToLocalTime(mills, ZoneId.of(zoneId));
+    }
+
+    public static LocalTime millsToLocalTime(long mills) {
+        return millsToLocalTime(mills, ZONE_ID_GMT);
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochSecond(seconds);
+        return LocalTime.ofInstant(instant, zoneId);
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds, String zoneId) {
+        return secondsToLocalTime(seconds, ZoneId.of(zoneId));
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds) {
+        return secondsToLocalTime(seconds, ZONE_ID_GMT);
+    }
+
+    public static int[] millsToHMS(long mills, ZoneId zoneId) {
+        LocalTime localTime = millsToLocalTime(mills, zoneId);
+        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
+    }
+
+    public static int[] millsToHMS(long mills, String zoneId) {
+        return millsToHMS(mills, ZoneId.of(zoneId));
+    }
+
+    public static int[] millsToHMS(long mills) {
+        return millsToHMS(mills, ZONE_ID_GMT);
+    }
+
+    public static int[] secondsToHMS(long seconds, ZoneId zoneId) {
+        LocalTime localTime = secondsToLocalTime(seconds, zoneId);
+        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
+    }
+
+    public static int[] secondsToHMS(long seconds, String zoneId) {
+        return secondsToHMS(seconds, ZoneId.of(zoneId));
+    }
+
+    public static int[] secondsToHMS(long seconds) {
+        return secondsToHMS(seconds, ZONE_ID_GMT);
     }
 }

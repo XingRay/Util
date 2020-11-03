@@ -8,7 +8,7 @@ import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Locale;
 
-public class DateUtilTest {
+public class DateTimeUtilTest {
 
     @Test
     public void test01() {
@@ -168,15 +168,15 @@ public class DateUtilTest {
         ZoneId ZONE_ID_BEIJING = ZoneId.of("+08:00");
         ZoneId ZONE_ID_US = ZoneId.of("-04:00");
 
-        System.out.println(DateUtil.startMillsOfSameDay(DateUtil.nowMills(), ZONE_ID_BEIJING));
-        System.out.println(DateUtil.endMillsOfSameDay(DateUtil.nowMills(), ZONE_ID_BEIJING));
-        System.out.println(DateUtil.startSecondsOfSameDay(DateUtil.nowSecond(), ZONE_ID_BEIJING));
-        System.out.println(DateUtil.endSecondsOfSameDay(DateUtil.nowSecond(), ZONE_ID_BEIJING));
+        System.out.println(DateTimeUtil.startMillsOfSameDay(DateTimeUtil.nowMills(), ZONE_ID_BEIJING));
+        System.out.println(DateTimeUtil.endMillsOfSameDay(DateTimeUtil.nowMills(), ZONE_ID_BEIJING));
+        System.out.println(DateTimeUtil.startSecondsOfSameDay(DateTimeUtil.nowSecond(), ZONE_ID_BEIJING));
+        System.out.println(DateTimeUtil.endSecondsOfSameDay(DateTimeUtil.nowSecond(), ZONE_ID_BEIJING));
 
 
-        System.out.println(DateUtil.startMillsOfSameDay(DateUtil.nowMills(), ZONE_ID_US));
-        System.out.println(DateUtil.endMillsOfSameDay(DateUtil.nowMills(), ZONE_ID_US));
-        System.out.println(DateUtil.startSecondsOfSameDay(DateUtil.nowSecond(), ZONE_ID_US));
-        System.out.println(DateUtil.endSecondsOfSameDay(DateUtil.nowSecond(), ZONE_ID_US));
+        System.out.println(DateTimeUtil.startMillsOfSameDay(DateTimeUtil.nowMills(), ZONE_ID_US));
+        System.out.println(DateTimeUtil.endMillsOfSameDay(DateTimeUtil.nowMills(), ZONE_ID_US));
+        System.out.println(DateTimeUtil.startSecondsOfSameDay(DateTimeUtil.nowSecond(), ZONE_ID_US));
+        System.out.println(DateTimeUtil.endSecondsOfSameDay(DateTimeUtil.nowSecond(), ZONE_ID_US));
     }
 }
