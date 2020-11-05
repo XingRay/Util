@@ -533,6 +533,60 @@ public class DateTimeUtil {
         return todayToDateString(DateTimeFormatter.BASIC_ISO_DATE, ZONE_ID_GMT);
     }
 
+    // =====================================================//
+
+    public static LocalTime millsToLocalTime(long mills, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        return LocalTime.ofInstant(instant, zoneId);
+    }
+
+    public static LocalTime millsToLocalTime(long mills, String zoneId) {
+        return millsToLocalTime(mills, ZoneId.of(zoneId));
+    }
+
+    public static LocalTime millsToLocalTime(long mills) {
+        return millsToLocalTime(mills, ZONE_ID_GMT);
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochSecond(seconds);
+        return LocalTime.ofInstant(instant, zoneId);
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds, String zoneId) {
+        return secondsToLocalTime(seconds, ZoneId.of(zoneId));
+    }
+
+    public static LocalTime secondsToLocalTime(long seconds) {
+        return secondsToLocalTime(seconds, ZONE_ID_GMT);
+    }
+
+    public static int[] millsToHMS(long mills, ZoneId zoneId) {
+        LocalTime localTime = millsToLocalTime(mills, zoneId);
+        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
+    }
+
+    public static int[] millsToHMS(long mills, String zoneId) {
+        return millsToHMS(mills, ZoneId.of(zoneId));
+    }
+
+    public static int[] millsToHMS(long mills) {
+        return millsToHMS(mills, ZONE_ID_GMT);
+    }
+
+    public static int[] secondsToHMS(long seconds, ZoneId zoneId) {
+        LocalTime localTime = secondsToLocalTime(seconds, zoneId);
+        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
+    }
+
+    public static int[] secondsToHMS(long seconds, String zoneId) {
+        return secondsToHMS(seconds, ZoneId.of(zoneId));
+    }
+
+    public static int[] secondsToHMS(long seconds) {
+        return secondsToHMS(seconds, ZONE_ID_GMT);
+    }
+
     public static long nowMills() {
         return Instant.now().toEpochMilli();
     }
@@ -597,59 +651,6 @@ public class DateTimeUtil {
         return endSecondsOfSameDay(seconds, ZONE_ID_GMT);
     }
 
-    // =====================================================//
-
-    public static LocalTime millsToLocalTime(long mills, ZoneId zoneId) {
-        Instant instant = Instant.ofEpochMilli(mills);
-        return LocalTime.ofInstant(instant, zoneId);
-    }
-
-    public static LocalTime millsToLocalTime(long mills, String zoneId) {
-        return millsToLocalTime(mills, ZoneId.of(zoneId));
-    }
-
-    public static LocalTime millsToLocalTime(long mills) {
-        return millsToLocalTime(mills, ZONE_ID_GMT);
-    }
-
-    public static LocalTime secondsToLocalTime(long seconds, ZoneId zoneId) {
-        Instant instant = Instant.ofEpochSecond(seconds);
-        return LocalTime.ofInstant(instant, zoneId);
-    }
-
-    public static LocalTime secondsToLocalTime(long seconds, String zoneId) {
-        return secondsToLocalTime(seconds, ZoneId.of(zoneId));
-    }
-
-    public static LocalTime secondsToLocalTime(long seconds) {
-        return secondsToLocalTime(seconds, ZONE_ID_GMT);
-    }
-
-    public static int[] millsToHMS(long mills, ZoneId zoneId) {
-        LocalTime localTime = millsToLocalTime(mills, zoneId);
-        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
-    }
-
-    public static int[] millsToHMS(long mills, String zoneId) {
-        return millsToHMS(mills, ZoneId.of(zoneId));
-    }
-
-    public static int[] millsToHMS(long mills) {
-        return millsToHMS(mills, ZONE_ID_GMT);
-    }
-
-    public static int[] secondsToHMS(long seconds, ZoneId zoneId) {
-        LocalTime localTime = secondsToLocalTime(seconds, zoneId);
-        return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
-    }
-
-    public static int[] secondsToHMS(long seconds, String zoneId) {
-        return secondsToHMS(seconds, ZoneId.of(zoneId));
-    }
-
-    public static int[] secondsToHMS(long seconds) {
-        return secondsToHMS(seconds, ZONE_ID_GMT);
-    }
 
     public static boolean isSameDayOfMills(long mills1, long mills2, ZoneId zoneId) {
         if (Math.abs(mills1 - mills2) > DAY_IN_MILLS) {
@@ -688,4 +689,60 @@ public class DateTimeUtil {
     public static boolean isSameDayOfSeconds(long seconds1, long seconds2) {
         return isSameDayOfSeconds(seconds1, seconds2, ZONE_ID_GMT);
     }
+
+
+    // ====================================================================//
+
+    public static long startMillsOfYear(int year, ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, 1, 1, 0, 0, 0, 0);
+        return localDateTime.atZone(zoneId).toInstant().toEpochMilli();
+    }
+
+    public static long startMillsOfYear(int year, String zoneId) {
+        return startMillsOfYear(year, ZoneId.of(zoneId));
+    }
+
+    public static long startMillsOfYear(int year) {
+        return startMillsOfYear(year, ZONE_ID_GMT);
+    }
+
+    public static long endMillsOfYear(int year, ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, 12, 31, 23, 59, 59, 999999999);
+        return localDateTime.atZone(zoneId).toInstant().toEpochMilli();
+    }
+
+    public static long endMillsOfYear(int year, String zoneId) {
+        return endMillsOfYear(year, ZoneId.of(zoneId));
+    }
+
+    public static long endMillsOfYear(int year) {
+        return endMillsOfYear(year, ZONE_ID_GMT);
+    }
+
+    public static long startSecondsOfYear(int year, ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, 1, 1, 0, 0, 0, 0);
+        return localDateTime.atZone(zoneId).toInstant().getEpochSecond();
+    }
+
+    public static long startSecondsOfYear(int year, String zoneId) {
+        return startSecondsOfYear(year, ZoneId.of(zoneId));
+    }
+
+    public static long startSecondsOfYear(int year) {
+        return startSecondsOfYear(year, ZONE_ID_GMT);
+    }
+
+    public static long endSecondsOfYear(int year, ZoneId zoneId) {
+        LocalDateTime localDateTime = LocalDateTime.of(year, 12, 31, 23, 59, 59, 999999999);
+        return localDateTime.atZone(zoneId).toInstant().getEpochSecond();
+    }
+
+    public static long endSecondsOfYear(int year, String zoneId) {
+        return endSecondsOfYear(year, ZoneId.of(zoneId));
+    }
+
+    public static long endSecondsOfYear(int year) {
+        return endSecondsOfYear(year, ZONE_ID_GMT);
+    }
+
 }
