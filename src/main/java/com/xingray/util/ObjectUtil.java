@@ -134,4 +134,40 @@ public class ObjectUtil {
 
         return null;
     }
+
+    public static boolean isAllNull(Object... objects) {
+        for (Object o : objects) {
+            if (o != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isAtLeastOneIsNotNull(Object... objects) {
+        for (Object o : objects) {
+            if (o != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isNoneNull(Object... objects) {
+        for (Object o : objects) {
+            if (o == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isAtLeastOneIsNull(Object... objects) {
+        for (Object o : objects) {
+            if (o == null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
