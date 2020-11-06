@@ -16,8 +16,8 @@ public class ReflectUtil {
         Field field = null;
         try {
             field = cls.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            System.out.println("field: " + fieldName + " not found in class: " + cls.getCanonicalName());
+        } catch (NoSuchFieldException ignored) {
+
         }
         if (field == null) {
             return null;
@@ -28,8 +28,8 @@ public class ReflectUtil {
 
         try {
             return cls.getMethod(methodName);
-        } catch (NoSuchMethodException e) {
-            System.out.println("method: " + methodName + " not found in class: " + cls.getCanonicalName());
+        } catch (NoSuchMethodException ignored) {
+
         }
         return null;
     }
@@ -37,13 +37,13 @@ public class ReflectUtil {
     public static String getGetterName(String fieldName, Class<?> type) {
         String methodName;
         if (type == boolean.class) {
-            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+            if (isStartWithIsField(fieldName)) {
                 methodName = fieldName;
             } else {
                 methodName = "is" + StringUtil.captain(fieldName);
             }
         } else if (type == Boolean.class) {
-            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+            if (isStartWithIsField(fieldName)) {
                 methodName = "get" + StringUtil.captain(fieldName.substring(2));
             } else {
                 methodName = "get" + StringUtil.captain(fieldName);
@@ -55,6 +55,10 @@ public class ReflectUtil {
         return methodName;
     }
 
+    public static boolean isStartWithIsField(String fieldName) {
+        return fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2));
+    }
+
     /**
      * 根据属性，获取set方法
      */
@@ -62,8 +66,8 @@ public class ReflectUtil {
         Field field = null;
         try {
             field = cls.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
-            System.out.println(e.getMessage());
+        } catch (NoSuchFieldException ignored) {
+
         }
         if (field == null) {
             return null;
@@ -74,8 +78,8 @@ public class ReflectUtil {
 
         try {
             return cls.getMethod(methodName, type);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
+
         }
         return null;
     }
@@ -83,13 +87,13 @@ public class ReflectUtil {
     public static String getSetterName(String fieldName, Class<?> type) {
         String methodName;
         if (type == boolean.class) {
-            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+            if (isStartWithIsField(fieldName)) {
                 methodName = "set" + StringUtil.captain(fieldName.substring(2));
             } else {
                 methodName = "set" + StringUtil.captain(fieldName);
             }
         } else if (type == Boolean.class) {
-            if (fieldName.startsWith("is") && fieldName.length() > 2 && Character.isUpperCase(fieldName.charAt(2))) {
+            if (isStartWithIsField(fieldName)) {
                 methodName = "set" + StringUtil.captain(fieldName.substring(2));
             } else {
                 methodName = "set" + StringUtil.captain(fieldName);
@@ -121,8 +125,8 @@ public class ReflectUtil {
         }
         try {
             return getter.invoke(o);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException ignored) {
+
         }
         return null;
     }
@@ -148,8 +152,8 @@ public class ReflectUtil {
         try {
             Class<?> paramClass = setter.getParameterTypes()[0];
             setter.invoke(o, ObjectUtil.ensureMatchesType(value, paramClass));
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException ignored) {
+
         }
     }
 }

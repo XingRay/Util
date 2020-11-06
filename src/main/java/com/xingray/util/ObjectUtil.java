@@ -2,7 +2,6 @@ package com.xingray.util;
 
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +15,8 @@ public class ObjectUtil {
         T instance = null;
         try {
             instance = cls.getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+
         }
         if (instance == null) {
             return null;
