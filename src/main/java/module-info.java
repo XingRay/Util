@@ -1,5 +1,5 @@
 module Util {
     requires JavaBase;
 
-    opens com.xingray.util;
+    exports com.xingray.util;
 }
