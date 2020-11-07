@@ -1,7 +1,8 @@
 package com.xingray.util;
 
-import com.xingray.util.base.Mapper;
-import com.xingray.util.base.Mapper2;
+
+import com.xingray.javabase.interfaces.Mapper;
+import com.xingray.javabase.interfaces.Mapper2;
 
 import java.util.Map;
 

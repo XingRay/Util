@@ -1,6 +1,7 @@
 package com.xingray.util;
 
-import com.xingray.util.base.Mapper;
+
+import com.xingray.javabase.interfaces.Mapper;
 
 import java.io.*;
 import java.net.URL;
