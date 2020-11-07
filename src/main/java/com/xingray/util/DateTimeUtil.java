@@ -561,6 +561,36 @@ public class DateTimeUtil {
         return secondsToLocalTime(seconds, ZONE_ID_GMT);
     }
 
+    // ============================================================//
+
+    public static ZonedDateTime secondsToZonedDateTime(long seconds, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochSecond(seconds);
+        return ZonedDateTime.ofInstant(instant, zoneId);
+    }
+
+    public static ZonedDateTime secondsToZonedDateTime(long seconds, String zoneId) {
+        return secondsToZonedDateTime(seconds, ZoneId.of(zoneId));
+    }
+
+    public static ZonedDateTime secondsToZonedDateTime(long seconds) {
+        return secondsToZonedDateTime(seconds, ZONE_ID_GMT);
+    }
+
+    public static ZonedDateTime millsToZonedDateTime(long mills, ZoneId zoneId) {
+        Instant instant = Instant.ofEpochMilli(mills);
+        return ZonedDateTime.ofInstant(instant, zoneId);
+    }
+
+    public static ZonedDateTime millsToZonedDateTime(long mills, String zoneId) {
+        return millsToZonedDateTime(mills, ZoneId.of(zoneId));
+    }
+
+    public static ZonedDateTime millsToZonedDateTime(long mills) {
+        return millsToZonedDateTime(mills, ZONE_ID_GMT);
+    }
+
+    // ==============================================================//
+
     public static int[] millsToHMS(long mills, ZoneId zoneId) {
         LocalTime localTime = millsToLocalTime(mills, zoneId);
         return new int[]{localTime.getHour(), localTime.getMinute(), localTime.getSecond()};
