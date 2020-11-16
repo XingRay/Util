@@ -99,7 +99,7 @@ public class ConfigUtil {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             Object key = entry.getKey();
             Object value = entry.getValue();
-            properties.put(StringUtil.toString(key), StringUtil.toString(value));
+            properties.put(StringUtil.toString(key), StringUtil.toString(value, ""));
         }
         return properties;
     }
