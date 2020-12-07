@@ -425,4 +425,19 @@ public class StringUtil {
         return new String(ch);
     }
 
+    public static String getIntString(int value, int length) {
+        String indexString = Integer.toString(value);
+        if (length <= 0) {
+            return indexString;
+        }
+        if (value < 0) {
+            return indexString;
+        }
+        int lengthDiff = length - indexString.length();
+        return "0".repeat(Math.max(0, lengthDiff)) + indexString;
+    }
+
+    public static String getAlignIntString(int value, int maxValue) {
+        return StringUtil.getIntString(value, (int) Math.floor(Math.log10(maxValue)) + 1);
+    }
 }
