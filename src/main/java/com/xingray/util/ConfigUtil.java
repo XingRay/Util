@@ -9,12 +9,14 @@ import java.util.Properties;
 
 public class ConfigUtil {
 
-    public static Map<String, String> loadConfig(String relativePath) {
-        return null;
+    public static Map<String, String> loadConfig(String path) {
+        Properties properties = loadProperties(path);
+        return propertiesToStringMap(properties);
     }
 
-    public static String saveConfig(String path, Map<String, String> config) {
-        return null;
+    public static void saveConfig(String path, Map<String, String> config) {
+        Properties properties = mapToProperties(config);
+        saveProperties(path, properties);
     }
 
     public static Properties loadProperties(String path) {
@@ -86,6 +88,26 @@ public class ConfigUtil {
             Object key = entry.getKey();
             Object value = entry.getValue();
             map.put(key.toString(), value);
+        }
+        return map;
+    }
+
+    public static Map<String, String> propertiesToStringMap(Properties properties) {
+        if (properties == null || properties.isEmpty()) {
+            return null;
+        }
+
+        Map<String, String> map = new HashMap<>(properties.size());
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            Object key = entry.getKey();
+            if (key == null) {
+                key = "";
+            }
+            Object value = entry.getValue();
+            if (value == null) {
+                value = "";
+            }
+            map.put(key.toString(), value.toString());
         }
         return map;
     }
