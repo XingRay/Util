@@ -4,6 +4,7 @@ package com.xingray.util;
 import com.xingray.javabase.interfaces.Mapper;
 import com.xingray.javabase.interfaces.Mapper2;
 
+import java.text.NumberFormat;
 import java.util.Map;
 
 public class StringUtil {
@@ -336,6 +337,17 @@ public class StringUtil {
         return value.toString();
     }
 
+    public static String toString(double value) {
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return nf.format(value);
+    }
+
+    public static String toString(float value) {
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return nf.format(value);
+    }
 
     public static Long[] toLongs(String s, String sep) {
         if (isEmpty(s)) {
